@@ -5,6 +5,10 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
+body.hideScroll {
+  overflow: hidden;
+}
+
 a {
   color: #ff5E84;
   text-decoration: none;
@@ -30,7 +34,7 @@ p, .description {
 }
 #intro {
   width: 300px;
-  margin-right: 20px;
+  margin-right: 64px;
 
 }
 
@@ -60,17 +64,31 @@ button:hover {
   text-decoration: underline;
 }
 
-button.fat:hover {
+.button:hover {
   text-decoration: none;
 }
 
-button.fat {
+.button {
   background: #ff5e84;
   color: white;
+
   width: 150px;
   height: 40px;
-  border-radius: 6px;
+
+  border-radius: 8px;
   box-shadow: 0px 8px 16px rgba(255,0,92,0.16);
+
+  font-size: 14px;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button:hover {
+  background-color: #0984e3;
+  text-decoration: none;
 }
 
 footer {
@@ -118,15 +136,20 @@ footer a {
   background: #ff5e84;
   position: absolute;
   top: 0;
-  width: 100vw;
-  height: 100vh;
+  bottom: 0;
+  right: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+#modal.addScroll {
+  overflow: auto;
+}
+
 #modal .content {
-  margin-top: 128px;
+  margin-top: 5%;
   color:white;
 }
 
@@ -135,9 +158,9 @@ footer a {
   text-transform: uppercase;
 }
 
-.content form {
+#modal form {
   width: 80%;
-  margin: 0 auto;
+  margin: 0 auto 15%;
   max-width: 800px;
 
   display: grid;
@@ -217,4 +240,59 @@ form button:hover {
 #modal.hide {
   opacity: 0;
   visibility: hidden;
+}
+
+/* IDEIA HTML**/
+
+#page-ideias #container {
+  display: block;
+}
+
+#page-ideias header {
+  display: flex;
+  justify-content: space-between;
+}
+
+#page-ideias nav {
+  display: flex;
+  align-items: center;
+}
+
+#page-ideias nav li {
+  list-style-type: none;
+  margin-right: 16px;
+}
+
+#page-ideias nav li:last-child {
+  margin:0;
+}
+
+section#title {
+  text-align: center;
+}
+
+section#title p {
+  opacity: 0.7;
+  margin: 0;
+}
+
+section#title h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+section#ideias {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px
+}
+
+section#ideias .idea {
+  margin: 0;
+}
+
+section#title,
+section#ideias,
+footer {
+  margin-top: 64px;
 }
