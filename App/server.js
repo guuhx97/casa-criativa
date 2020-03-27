@@ -1,41 +1,12 @@
 import express from 'express';
 import nunjucks from 'nunjucks';
 
-
-const ideas = [
-  {
-    img: "https://image.flaticon.com/icons/svg/2729/2729005.svg",
-    title: "Cursos de Programação",
-    category: "Estudo",
-    description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus quos nihil tempora architecto, facilis quisquam fugit corrupti cupiditate omnis consectetur, sit consequuntur. Quae cupiditate mollitia ea quisquam deleniti ex obcae",
-    url: "https://google.com"
-  },
-  {
-    img: "https://image.flaticon.com/icons/svg/2729/2729007.svg",
-    title: "Exercicios",
-    category: "Saude",
-    description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus quos nihil tempora architecto, facilis quisquam fugit corrupti cupiditate omnis consectetur, sit consequuntur. Quae cupiditate mollitia ea quisquam deleniti ex obcae",
-    url: "https://google.com"
-  },
-  {
-    img: "https://image.flaticon.com/icons/svg/2729/2729069.svg",
-    title: "Meditação",
-    category: "Mentalidade",
-    description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus quos nihil tempora architecto, facilis quisquam fugit corrupti cupiditate omnis consectetur, sit consequuntur. Quae cupiditate mollitia ea quisquam deleniti ex obcae",
-    url: "https://google.com"
-  },
-  {
-    img: "https://image.flaticon.com/icons/svg/2729/2729032.svg",
-    title: "Karaokê",
-    category: "Diversão em Familia",
-    description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus quos nihil tempora architecto, facilis quisquam fugit corrupti cupiditate omnis consectetur, sit consequuntur. Quae cupiditate mollitia ea quisquam deleniti ex obcae",
-    url: "https://google.com"
-  },
-]
+const db = require('./db');
 
 const server = express()
 
 server.use(express.static("public"))
+server.use(express.urlencoded({ extended: true}))
 
 
 nunjucks.configure("views", {
@@ -46,20 +17,57 @@ nunjucks.configure("views", {
 
 server.get('/', (req,res) => {
 
-  const reversedIdeas = [...ideas];
+  db.all(`SELECT * FROM ideas`, function (err, rows) {
+    if(err) {
+      console.log(err)
+      return res.send('Erro no banco de dados')
+    }
 
-  let lastIdeas = []
-  for(let idea of reversedIdeas.reverse()){
-    if(lastIdeas.length < 2){
-      lastIdeas.push(idea)
-    } 
-  }
-  return res.render('index.html', { ideas: lastIdeas })
+    const reversedIdeas = [...rows];
+
+    let lastIdeas = []
+    for(let idea of reversedIdeas.reverse()){
+      if(lastIdeas.length < 2){
+        lastIdeas.push(idea)
+      } 
+    }
+    return res.render('index.html', { ideas: lastIdeas })
+  });
+
 })
 
 server.get('/ideias', (req,res) => {
-  const reversedIdeas = [...ideas];
-  return res.render("ideias.html", { ideas: reversedIdeas.reverse() })
+
+  db.all(`SELECT * FROM ideas`, function (err, rows) {
+    if(err) {
+      console.log(err)
+      return res.send('Erro no banco de dados')
+    }
+
+    const reversedIdeas = [...rows];
+    return res.render("ideias.html", { ideas: reversedIdeas.reverse() })
+  });
+
+
+})
+
+server.post('/', (req,res) => {
+  const query =  `INSERT INTO ideas(image, title, category, description, link) VALUES (?,?,?,?,?);`;
+  const values = [
+    req.body.image,
+    req.body.title,
+    req.body.category,
+    req.body.description,
+    req.body.link,
+  ]
+  db.run (query, values, function(err) {
+    if(err) {
+      console.log(err)
+      return res.send('Erro no banco de dados')
+    }
+
+    return res.redirect("/ideias");
+  })
 })
 
 server.listen(3333);
