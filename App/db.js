@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('./ws.db');
+const db = new sqlite3.Database('./database2.db');
 
 db.serialize(() => {
 
@@ -29,16 +29,14 @@ db.serialize(() => {
     //   console.log(this)
     // })
 
-    db.run(`DELETE FROM ideas WHERE id = ?`, [1], function (err){
-      if(err) {return console.log(err)}
+//    db.run(`DELETE FROM ideas WHERE id = ?`, [1], function (err){
+//    if(err) {return console.log(err)}
 
-    })
+//    })
 
-    db.all(`SELECT * FROM ideas`, function (err, rows) {
-      if(err) return console.log(err)
-
-
-    });
+//    db.all(`SELECT * FROM ideas`, function (err, rows) {
+//      if(err) return console.log(err)
+//    });
   })
 
 module.exports = db;
